@@ -1,29 +1,35 @@
 package com.HackRice.musicrun.com.musicrun.gameobjects;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Esteban on 1/31/2015.
  */
 public class RunningMan {
-  // position.x then refers to the x coordinate, and velocity.y would correspond to the speed in the y direction. acceleration just means change in velocity,
-  // just like velocity means change in position.
 
     private Vector2 position;
     private Vector2 velocity;
     private Vector2 acceleration;
 
-    private float rotation; // for handling rotation
+    private float rotation;
     private int width;
     private int height;
 
-    public RunningMan(float x, float y, int width, int height){
+    private boolean isAlive;
+
+    private Circle boundingCircle;
+
+    public RunningMan(float x, float y, int width, int height) {
         this.width = width;
         this.height = height;
-        position = new Vector2(x,y);
-        velocity = new Vector2(0,0);
-        acceleration = new Vector2(0,460);
+        position = new Vector2(x, y);
+        velocity = new Vector2(0, 0);
+        acceleration = new Vector2(0, 460);
+        boundingCircle = new Circle();
+        isAlive = true;
     }
+
     public void update(float delta) {
 
         velocity.add(acceleration.cpy().scl(delta));
@@ -34,10 +40,56 @@ public class RunningMan {
 
         position.add(velocity.cpy().scl(delta));
 
+        // Set the circle's center to be (9, 6) with respect to the bird.
+        // Set the circle's radius to be 6.5f;
+        boundingCircle.set(position.x + 9, position.y + 6, 6.5f);
+
+        // Rotate counterclockwise
+        if (velocity.y < 0) {
+            rotation -= 600 * delta;
+
+            if (rotation < -20) {
+                rotation = -20;
+            }
+        }
+
+        // Rotate clockwise
+        if (isFalling() || !isAlive) {
+            rotation += 480 * delta;
+            if (rotation > 90) {
+                rotation = 90;
+            }
+
+        }
+
+    }
+
+    public boolean isFalling() {
+        return velocity.y > 110;
+    }
+
+    public boolean shouldntFlap() {
+        return velocity.y > 70 || !isAlive;
     }
 
     public void onClick() {
-        velocity.y = -140;
+
+        if (isAlive) {
+            velocity.y = -65;
+        }
+    }
+
+    public void die() {
+        isAlive = false;
+        velocity.y = 0;
+    }
+    public void groundTouch(){
+        isAlive = true;
+        velocity.y = -1;
+    }
+
+    public void decelerate() {
+        acceleration.y = 0;
     }
 
     public float getX() {
@@ -59,4 +111,13 @@ public class RunningMan {
     public float getRotation() {
         return rotation;
     }
+
+    public Circle getBoundingCircle() {
+        return boundingCircle;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
 }
+

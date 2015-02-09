@@ -3,19 +3,15 @@ package com.HackRice.musicrun;
 
 import com.HackRice.musicrun.com.musicrun.helpers.AssetLoader;
 import com.HackRice.musicrun.com.musicrun.screens.GameScreen;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MRGame extends Game{
 
 
     @Override
     public void create() {
-        Gdx.app.log("MRGame","created");
+     //Gdx.app.log("MRGame","created");
+
         AssetLoader.load();
         setScreen(new GameScreen());
     }
